@@ -31,7 +31,10 @@ export default function DogsList({ breed, sortOrder, page, setPage }: DogsListPr
       if (breed) params.append("breeds", breed)
       params.append("size", pageSize.toString())
       params.append("from", ((page - 1) * pageSize).toString())
-      params.append("sort", `breed:${sortOrder}`)
+      
+      // determine sorting field based on whether breed selected
+      const sortField = breed ? "name" : "breed"
+      params.append("sort", `${sortField}:${sortOrder}`)
 
       try {
         const res = await fetch(`https://frontend-take-home-service.fetch.com/dogs/search?${params.toString()}`, {
