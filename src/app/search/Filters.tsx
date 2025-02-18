@@ -6,10 +6,19 @@ interface FiltersProps {
   selectedBreed: string;
   onBreedChange: (breed: string) => void;
   sortOrder: "asc" | "desc";
-  onSortChange: (order: "asc" | "desc") => void;
+  onSortChange: (order: "asc" | "desc") => void
+  selectedLocation: string
+  onLocationChange: (zip: string) => void
 }
 
-export default function Filters({ selectedBreed, onBreedChange, sortOrder, onSortChange }: FiltersProps) {
+export default function Filters({ 
+  selectedBreed, 
+  onBreedChange, 
+  sortOrder, 
+  onSortChange,
+  selectedLocation,
+  onLocationChange
+}: FiltersProps) {
   const [breeds, setBreeds] = useState<string[]>([])
 
   useEffect(() => {
@@ -43,6 +52,15 @@ export default function Filters({ selectedBreed, onBreedChange, sortOrder, onSor
           <option key={breed} value={breed}>{breed}</option>
         ))}
       </select>
+
+      {/* Location Filter */}
+      <input
+        type="text"
+        placeholder="Enter Zip Code"
+        value={selectedLocation}
+        onChange={(e) => onLocationChange(e.target.value)}
+        className="border p-2 rounded"
+      />
 
       {/* Sort */}
       <button 

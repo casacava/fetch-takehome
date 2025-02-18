@@ -16,12 +16,13 @@ interface DogsListProps {
   breed: string;
   sortOrder: "asc" | "desc";
   page: number;
-  setPage: (page: number) => void;
+  setPage: (page: number) => void
+  selectedLocation: string
   favorites: string[]
   onToggleFavorite: (id: string) => void
 }
 
-export default function DogsList({ breed, sortOrder, page, setPage, favorites, onToggleFavorite }: DogsListProps) {
+export default function DogsList({ breed, sortOrder, page, setPage, selectedLocation, favorites, onToggleFavorite }: DogsListProps) {
   const [dogIds, setDogIds] = useState<string[]>([])
   const [dogs, setDogs] = useState<Dog[]>([])
   const [totalDogs, setTotalDogs] = useState(0)
@@ -33,6 +34,7 @@ export default function DogsList({ breed, sortOrder, page, setPage, favorites, o
       setLoading(true)
       const params = new URLSearchParams()
       if (breed) params.append("breeds", breed)
+      if (selectedLocation) params.append("zipCodes", selectedLocation)
       params.append("size", pageSize.toString())
       params.append("from", ((page - 1) * pageSize).toString())
       
@@ -58,7 +60,7 @@ export default function DogsList({ breed, sortOrder, page, setPage, favorites, o
     }
 
     fetchDogIds()
-  }, [breed, sortOrder, page])
+  }, [breed, sortOrder, selectedLocation, page])
 
   useEffect(() => {
     async function fetchDogDetails() {

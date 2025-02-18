@@ -8,6 +8,7 @@ import DogsList from "./DogsList"
 export default function SearchPage() {
   const [selectedBreed, setSelectedBreed] = useState("")
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc")
+  const [selectedLocation, setSelectedLocation] = useState("")
   const [page, setPage] = useState(1)
   const [favorites, setFavorites] = useState<string[]>(() => {
     // load favorites from localStorage on first render
@@ -95,12 +96,14 @@ export default function SearchPage() {
       </div>
       <h1 className="text-3xl font-bold mb-4">Find Your New Best Friend 🐶</h1>
 
-      {/* Breed Filter & Sorting */}
+      {/* Filters */}
       <Filters 
         selectedBreed={selectedBreed} 
         onBreedChange={setSelectedBreed} 
         sortOrder={sortOrder} 
-        onSortChange={setSortOrder} 
+        onSortChange={setSortOrder}
+        selectedLocation={selectedLocation}
+        onLocationChange={setSelectedLocation}
       />
 
       {/* Dog Results */}
@@ -109,6 +112,7 @@ export default function SearchPage() {
         sortOrder={sortOrder} 
         page={page} 
         setPage={setPage}
+        selectedLocation={selectedLocation}
         favorites={favorites} 
         onToggleFavorite={toggleFavorite}
       />
