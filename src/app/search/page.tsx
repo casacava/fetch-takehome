@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import Filters from "./Filters"
 import DogsList from "./DogsList"
@@ -9,9 +9,22 @@ export default function SearchPage() {
   const [selectedBreed, setSelectedBreed] = useState("")
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc")
   const [page, setPage] = useState(1)
-  const [favorites, setFavorites] = useState<string[]>([])
+  const [favorites, setFavorites] = useState<string[]>(() => {
+    // load favorites from localStorage on first render
+    if (typeof window !== "undefined") {
+      return JSON.parse(localStorage.getItem("favorites") || "[]")
+    }
+    return []
+  })
   const [match, setMatch] = useState<{ name: string; breed: string }| null>(null)
   const router = useRouter()
+
+  // save fav to localStorage
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("favorites", JSON.stringify(favorites))
+    }
+  }, [favorites])
 
   const handleLogout = async () => {
     try {
