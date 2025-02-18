@@ -34,9 +34,10 @@ export default function DogsList({ breed, sortOrder, page, setPage, selectedLoca
       setLoading(true)
       const params = new URLSearchParams()
       if (breed) params.append("breeds", breed)
-      if (selectedLocation) params.append("zipCodes", selectedLocation)
+      if (selectedLocation.length > 0) params.append("zipCodes", selectedLocation)
       params.append("size", pageSize.toString())
       params.append("from", ((page - 1) * pageSize).toString())
+      console.log("Filtering for zip:", selectedLocation)
       
       // determine sorting field based on whether breed selected
       const sortField = breed ? "name" : "breed"
