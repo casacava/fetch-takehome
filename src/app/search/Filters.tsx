@@ -20,6 +20,7 @@ export default function Filters({
   onLocationChange
 }: FiltersProps) {
   const [breeds, setBreeds] = useState<string[]>([])
+  const [zipError, setZipError] = useState(false)
 
   useEffect(() => {
     async function fetchBreeds() {
@@ -39,6 +40,12 @@ export default function Filters({
     fetchBreeds()
   }, [])
 
+  // check if zip code is incomplete
+  useEffect(() => {
+    if (selectedLocation.length > 0 && selectedLocation.length < 5) setZipError(true)
+    else setZipError(false)
+  }, [selectedLocation])
+
   return (
     <div className="mb-4 flex gap-4">
       {/* Breed Filter */}
@@ -54,13 +61,20 @@ export default function Filters({
       </select>
 
       {/* Location Filter */}
-      <input
-        type="text"
-        placeholder="Enter Zip Code"
-        value={selectedLocation}
-        onChange={(e) => onLocationChange(e.target.value)}
-        className="border p-2 rounded"
-      />
+      <div className="relative">
+          <input
+            type="text"
+            placeholder="Enter Zip Code"
+            value={selectedLocation}
+            onChange={(e) => onLocationChange(e.target.value)}
+            className={`border p-2 rounded ${zipError ? "border-red-500" : ""}`}
+          />
+          {zipError && (
+            <p className="text-red-500 text-sm mt-1 absolute -bottom-5">
+              Please enter a full 5-digit zip code.
+            </p>
+          )}
+        </div>
 
       {/* Sort */}
       <button 

@@ -32,9 +32,15 @@ export default function DogsList({ breed, sortOrder, page, setPage, selectedLoca
   useEffect(() => {
     async function fetchDogIds() {
       setLoading(true)
+
+      if (selectedLocation.length > 0 && selectedLocation.length < 5) {
+        setLoading(false)
+        return
+      }
+
       const params = new URLSearchParams()
       if (breed) params.append("breeds", breed)
-      if (selectedLocation.length > 0) params.append("zipCodes", selectedLocation)
+      if (selectedLocation.length === 5) params.append("zipCodes", selectedLocation)
       params.append("size", pageSize.toString())
       params.append("from", ((page - 1) * pageSize).toString())
       console.log("Filtering for zip:", selectedLocation)
