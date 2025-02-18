@@ -10,7 +10,7 @@ export default function SearchPage() {
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc")
   const [page, setPage] = useState(1)
   const [favorites, setFavorites] = useState<string[]>([])
-  const [match, setMatch] = useState<string | null>(null)
+  const [match, setMatch] = useState<{ name: string; breed: string }| null>(null)
   const router = useRouter()
 
   const handleLogout = async () => {
@@ -39,17 +39,33 @@ export default function SearchPage() {
     }
 
     try {
-      const res = await fetch("https://frontend-take-home-service.fetch.com/dogs/match", {
+      // Get Matched Dog ID
+      const matchRes = await fetch("https://frontend-take-home-service.fetch.com/dogs/match", {
         method: "POST",
         credentials: "include",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(favorites),
       })
-      if (!res.ok) throw new Error("failed to fetch match")
-      const data = await res.json()
-      setMatch(data.match)
+  
+      if (!matchRes.ok) throw new Error("Failed to fetch match")
+      const matchData = await matchRes.json()
+      const matchedDogId = matchData.match // The ID of the matched dog
+  
+      // matched dog details
+      const dogRes = await fetch("https://frontend-take-home-service.fetch.com/dogs", {
+        method: "POST",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify([matchedDogId]),
+      })
+  
+      if (!dogRes.ok) throw new Error("Failed to fetch dog details");
+      const dogData = await dogRes.json()
+      const matchedDog = dogData[0]
+  
+      setMatch({ name: matchedDog.name, breed: matchedDog.breed })
     } catch (error) {
-      console.error("error fetching match:", error)
+      console.error("Error fetching match:", error);
     }
   }
 
@@ -93,11 +109,10 @@ export default function SearchPage() {
       {/* Show Matched Dog */}
       {match && (
         <div className="mt-6 text-center">
-          <h2 className="text-xl font-bold">Your best match is: {match} 🎉</h2>
+          <h2 className="text-xl font-bold">Your best match is: {match.name}, the {match.breed}! 🎉 </h2>
         </div>
       )}
 
-      
     </div>
   )
 }
