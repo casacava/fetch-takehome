@@ -42,7 +42,7 @@ export default function Filters({
 
   // check if zip code is incomplete
   useEffect(() => {
-    if (selectedLocation.length > 0 && selectedLocation.length < 5) setZipError(true)
+    if (selectedLocation.length > 0 && selectedLocation.length !== 5) setZipError(true)
     else setZipError(false)
   }, [selectedLocation])
 
