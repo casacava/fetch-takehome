@@ -17,9 +17,11 @@ interface DogsListProps {
   sortOrder: "asc" | "desc";
   page: number;
   setPage: (page: number) => void;
+  favorites: string[]
+  onToggleFavorite: (id: string) => void
 }
 
-export default function DogsList({ breed, sortOrder, page, setPage }: DogsListProps) {
+export default function DogsList({ breed, sortOrder, page, setPage, favorites, onToggleFavorite }: DogsListProps) {
   const [dogIds, setDogIds] = useState<string[]>([])
   const [dogs, setDogs] = useState<Dog[]>([])
   const [totalDogs, setTotalDogs] = useState(0)
@@ -89,6 +91,16 @@ export default function DogsList({ breed, sortOrder, page, setPage }: DogsListPr
             <p className="text-gray-600">Breed: {dog.breed}</p>
             <p className="text-gray-600">Age: {dog.age}</p>
             <p className="text-gray-600">Zip Code: {dog.zip_code}</p>
+
+            {/* Favorite Button */}
+            <button
+              className={`mt-2 px-4 py-2 rounded ${
+                favorites.includes(dog.id) ? "bg-red-500 text-white" : "bg-gray-300"
+              }`}
+              onClick={() => onToggleFavorite(dog.id)}
+            >
+              {favorites.includes(dog.id) ? "Unfavorite ❤️" : "Favorite 🤍"}
+            </button>
           </div>
         ))}
       </div>
