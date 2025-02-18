@@ -47,12 +47,12 @@ export default function Filters({
   }, [selectedLocation])
 
   return (
-    <div className="mb-4 flex gap-4">
-      {/* Breed Filter */}
+    <div className="flex gap-4 items-start">
+      {/* Breed dropdown */}
       <select 
         value={selectedBreed} 
         onChange={(e) => onBreedChange(e.target.value)} 
-        className="border p-2 rounded"
+        className="border p-3 rounded w-1/3 text-lg"
       >
         <option value="">All Breeds</option>
         {breeds.map((breed) => (
@@ -60,25 +60,27 @@ export default function Filters({
         ))}
       </select>
 
-      {/* Location Filter */}
-      <div className="relative">
-          <input
-            type="text"
-            placeholder="Enter Zip Code"
-            value={selectedLocation}
-            onChange={(e) => onLocationChange(e.target.value)}
-            className={`border p-2 rounded ${zipError ? "border-red-500" : ""}`}
-          />
+      {/* Zip Code Input*/}
+      <div className="relative w-1/4 flex flex-col">
+        <input
+          type="text"
+          placeholder="Enter Zip Code"
+          value={selectedLocation}
+          onChange={(e) => onLocationChange(e.target.value)}
+          className={`border p-2 rounded w-full text-lg ${zipError ? "border-red-500" : ""}`}
+        />
+        <div className="h-[24px] mt-1 flex items-center">
           {zipError && (
-            <p className="text-red-500 text-sm mt-1 absolute -bottom-5">
-              Please enter a full 5-digit zip code.
-            </p>
+            <div className="bg-red-500 text-white text-xs px-3 py-1 rounded flex items-center gap-1 w-fit">
+              🚨 Please enter a full 5-digit zip code!
+            </div>
           )}
         </div>
+      </div>
 
-      {/* Sort */}
+      {/* Sort Button */}
       <button 
-        className="bg-blue-500 text-white px-4 py-2 rounded"
+        className="bg-blue-500 text-white px-6 py-3 rounded text-lg"
         onClick={() => onSortChange(sortOrder === "asc" ? "desc" : "asc")}
       >
         Sort: {sortOrder === "asc" ? "A → Z" : "Z → A"}
