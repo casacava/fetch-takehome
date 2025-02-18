@@ -99,38 +99,47 @@ export default function DogsList({ breed, sortOrder, page, setPage, selectedLoca
 
   return (
     <div>
-      {loading ? (
-        <div className="flex justify-center items-center mt-6">
-          <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid"></div>
-        </div>
-      ) : (
-        <>
-        {/* Show Dog List When Not Loading */}
-        <div className="grid grid-cols-2 gap-4">
-          {dogs.map((dog) => (
-            <div key={dog.id} className="border p-4 rounded">
-              <img src={dog.img} alt={dog.name} className="w-full h-40 object-cover rounded" />
-              <h2 className="text-xl font-bold mt-2">{dog.name}</h2>
-              <p className="text-gray-600">Breed: {dog.breed}</p>
-              <p className="text-gray-600">Age: {dog.age}</p>
-              <p className="text-gray-600">Zip Code: {dog.zip_code}</p>
+    {loading ? (
+      <div className="flex justify-center items-center mt-6">
+        <div className="animate-spin rounded-full h-16 w-16 border-t-4 border-blue-500 border-solid"></div>
+      </div>
+    ) : (
+      <>
+        {/* ✅ Show No Results Message When No Dogs Found */}
+        {dogIds.length === 0 && selectedLocation.length === 5 ? (
+          <div className="text-center mt-6 text-gray-600 text-lg">
+            💔 Sorry, that zip code didn’t match any dogs.  
+            <br />
+            🏙️ Maybe try searching by city instead?
+          </div>
+        ) : (
+          /* ✅ Show Dog List When There Are Matches */
+          <div className="grid grid-cols-2 gap-4">
+            {dogs.map((dog) => (
+              <div key={dog.id} className="border p-4 rounded">
+                <img src={dog.img} alt={dog.name} className="w-full h-40 object-cover rounded" />
+                <h2 className="text-xl font-bold mt-2">{dog.name}</h2>
+                <p className="text-gray-600">Breed: {dog.breed}</p>
+                <p className="text-gray-600">Age: {dog.age}</p>
+                <p className="text-gray-600">Zip Code: {dog.zip_code}</p>
 
-              {/* Favorite Button */}
-              <button
-                className={`mt-2 px-4 py-2 rounded ${
-                  favorites.includes(dog.id) ? "bg-red-500 text-white" : "bg-gray-300"
-                }`}
-                onClick={() => onToggleFavorite(dog.id)}
-              >
-                {favorites.includes(dog.id) ? "Unfavorite ❤️" : "Favorite 🤍"}
-              </button>
-            </div>
-          ))}
-        </div>
+                {/* Favorite Button */}
+                <button
+                  className={`mt-2 px-4 py-2 rounded ${
+                    favorites.includes(dog.id) ? "bg-red-500 text-white" : "bg-gray-300"
+                  }`}
+                  onClick={() => onToggleFavorite(dog.id)}
+                >
+                  {favorites.includes(dog.id) ? "Unfavorite ❤️" : "Favorite 🤍"}
+                </button>
+              </div>
+            ))}
+          </div>
+        )}
 
         <Pagination page={page} total={totalDogs} setPage={setPage} />
-        </>
-      )}
+      </>
+    )}
     </div>
   )
 }
