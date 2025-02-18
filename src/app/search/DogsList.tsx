@@ -108,7 +108,7 @@ export default function DogsList({ breed, sortOrder, page, setPage, selectedLoca
         {/* ✅ Show No Results Message When No Dogs Found */}
         {dogIds.length === 0 && selectedLocation.length === 5 ? (
           <div className="text-center mt-6 text-gray-600 text-lg">
-            💔 Sorry, that zip code didn’t match any dogs.  
+            💔 Sorry, that specific zip code didn’t match any dogs.  
             <br />
             🏙️ Maybe try searching by city instead?
           </div>
