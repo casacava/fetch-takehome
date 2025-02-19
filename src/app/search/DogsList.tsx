@@ -17,12 +17,13 @@ interface DogsListProps {
   sortOrder: "asc" | "desc";
   page: number;
   setPage: (page: number) => void
+  selectedCity: string
   selectedLocation: string
   favorites: string[]
   onToggleFavorite: (id: string) => void
 }
 
-export default function DogsList({ breed, sortOrder, page, setPage, selectedLocation, favorites, onToggleFavorite }: DogsListProps) {
+export default function DogsList({ breed, sortOrder, page, setPage, selectedCity, selectedLocation, favorites, onToggleFavorite }: DogsListProps) {
   const [dogIds, setDogIds] = useState<string[]>([])
   const [dogs, setDogs] = useState<Dog[]>([])
   const [totalDogs, setTotalDogs] = useState(0)
@@ -33,17 +34,37 @@ export default function DogsList({ breed, sortOrder, page, setPage, selectedLoca
     async function fetchDogIds() {
       setLoading(true)
 
-      if (selectedLocation.length > 0 && selectedLocation.length < 5) {
-        setLoading(false)
-        return
+      let zipCodesToSearch: string[] = [];
+
+      // ✅ If city is entered, fetch zip codes
+      if (selectedCity.length > 0) {
+        try {
+          const res = await fetch("https://frontend-take-home-service.fetch.com/locations/search", {
+            method: "POST",
+            credentials: "include",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ city: selectedCity }), // ✅ Search by city
+          });
+
+          if (!res.ok) throw new Error("Failed to fetch locations");
+          const data = await res.json();
+
+          zipCodesToSearch = data.results.map((location: { zip_code: string }) => location.zip_code);
+        } catch (error) {
+          console.error("Error fetching city locations:", error);
+        }
+      } 
+      // ✅ If zip code is entered, use it directly
+      else if (selectedLocation.length === 5) {
+        zipCodesToSearch = [selectedLocation];
       }
 
       const params = new URLSearchParams()
       if (breed) params.append("breeds", breed)
-      if (selectedLocation.length === 5) params.append("zipCodes", selectedLocation)
+      if (zipCodesToSearch.length > 0) params.append("zipCodes", zipCodesToSearch.join(","))
       params.append("size", pageSize.toString())
       params.append("from", ((page - 1) * pageSize).toString())
-      console.log("Filtering for zip:", selectedLocation)
+      console.log("Searching for zip codes:", zipCodesToSearch);
       
       // determine sorting field based on whether breed selected
       const sortField = breed ? "name" : "breed"
@@ -67,7 +88,7 @@ export default function DogsList({ breed, sortOrder, page, setPage, selectedLoca
     }
 
     fetchDogIds()
-  }, [breed, sortOrder, selectedLocation, page])
+  }, [breed, sortOrder, selectedCity, selectedLocation, page])
 
   useEffect(() => {
     async function fetchDogDetails() {

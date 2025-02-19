@@ -8,6 +8,7 @@ import DogsList from "./DogsList"
 export default function SearchPage() {
   const [selectedBreed, setSelectedBreed] = useState("")
   const [sortOrder, setSortOrder] = useState<"asc" | "desc">("asc")
+  const [selectedCity, setSelectedCity] = useState("")
   const [selectedLocation, setSelectedLocation] = useState("")
   const [page, setPage] = useState(1)
   const [favorites, setFavorites] = useState<string[]>(() => {
@@ -102,6 +103,8 @@ export default function SearchPage() {
         onBreedChange={setSelectedBreed} 
         sortOrder={sortOrder} 
         onSortChange={setSortOrder}
+        selectedCity={selectedCity}
+        onCityChange={setSelectedCity}
         selectedLocation={selectedLocation}
         onLocationChange={setSelectedLocation}
       />
@@ -112,6 +115,7 @@ export default function SearchPage() {
         sortOrder={sortOrder} 
         page={page} 
         setPage={setPage}
+        selectedCity={selectedCity}
         selectedLocation={selectedLocation}
         favorites={favorites} 
         onToggleFavorite={toggleFavorite}

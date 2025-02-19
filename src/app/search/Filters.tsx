@@ -7,6 +7,8 @@ interface FiltersProps {
   onBreedChange: (breed: string) => void;
   sortOrder: "asc" | "desc";
   onSortChange: (order: "asc" | "desc") => void
+  selectedCity: string
+  onCityChange: (city: string) => void
   selectedLocation: string
   onLocationChange: (zip: string) => void
 }
@@ -16,6 +18,8 @@ export default function Filters({
   onBreedChange, 
   sortOrder, 
   onSortChange,
+  selectedCity,
+  onCityChange,
   selectedLocation,
   onLocationChange
 }: FiltersProps) {
@@ -60,13 +64,30 @@ export default function Filters({
         ))}
       </select>
 
+      {/* City Input - Alternative to Zip Code */}
+      <div className="relative w-1/4 flex flex-col">
+        <input
+          type="text"
+          placeholder="Enter City"
+          value={selectedCity}
+          onChange={(e) => {
+          onCityChange(e.target.value)
+          onLocationChange("")
+          }}
+          className="border p-2 rounded w-full text-lg"
+        />
+      </div>
+
       {/* Zip Code Input*/}
       <div className="relative w-1/4 flex flex-col">
         <input
           type="text"
           placeholder="Enter Zip Code"
           value={selectedLocation}
-          onChange={(e) => onLocationChange(e.target.value)}
+          onChange={(e) => {
+            onLocationChange(e.target.value)
+            onCityChange("")
+          }}
           className={`border p-2 rounded w-full text-lg ${zipError ? "border-red-500" : ""}`}
         />
         <div className="h-[24px] mt-1 flex items-center">
