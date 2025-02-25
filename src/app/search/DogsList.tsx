@@ -36,7 +36,7 @@ export default function DogsList({ breed, sortOrder, page, setPage, selectedCity
 
       let zipCodesToSearch: string[] = [];
 
-      // ✅ If city is entered, fetch zip codes
+      // If city is entered, fetch zip codes
       if (selectedCity.length > 0) {
         try {
           const res = await fetch("https://frontend-take-home-service.fetch.com/locations/search", {
@@ -54,10 +54,13 @@ export default function DogsList({ breed, sortOrder, page, setPage, selectedCity
           console.error("Error fetching city locations:", error);
         }
       } 
-      // ✅ If zip code is entered, use it directly
+      // If zip code is entered, use it directly
       else if (selectedLocation.length === 5) {
-        zipCodesToSearch = [selectedLocation];
+        zipCodesToSearch = [selectedLocation]
       }
+
+      console.log("selectedCity:", selectedCity)
+      console.log("selectedLocation:", selectedLocation)
 
       const params = new URLSearchParams()
       if (breed) params.append("breeds", breed)
@@ -126,7 +129,7 @@ export default function DogsList({ breed, sortOrder, page, setPage, selectedCity
       </div>
     ) : (
       <>
-        {/* ✅ Show No Results Message When No Dogs Found */}
+        {/*  Show No Results Message When No Dogs Found */}
         {dogIds.length === 0 && selectedLocation.length === 5 ? (
           <div className="text-center mt-6 text-gray-600 text-lg">
             💔 Sorry, that specific zip code didn’t match any dogs.  
@@ -134,7 +137,7 @@ export default function DogsList({ breed, sortOrder, page, setPage, selectedCity
             🏙️ Maybe try searching by city instead?
           </div>
         ) : (
-          /* ✅ Show Dog List When There Are Matches */
+          /*  Show Dog List When There Are Matches */
           <div className="grid grid-cols-2 gap-4">
             {dogs.map((dog) => (
               <div key={dog.id} className="border p-4 rounded">
